@@ -1,0 +1,117 @@
+*{
+    box-sizing: border-box;
+}
+html {
+    height: 100%;
+}
+
+body.bgImg{
+    height: auto;
+    background: url(../img/bgImg.png) no-repeat center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+.loginBox{
+   position:absolute;
+    width:750px;
+    height:550px;
+    top:50%;
+    left:50%;
+    margin-top:-275px;
+    margin-left:-375px;
+}
+div.leftImg{
+    width:250px;
+    height: 550px;
+    float:left;
+    background: url(../img/leftImg.png) no-repeat;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+div.loginContent{
+    width:500px;
+    height:550px;
+    float:left;
+    padding:40px 50px 0 50px;
+    background-color: #fff;
+}
+div.welcome{
+    height:40px;
+    line-height: 40px;
+    font-family: "Microsoft YaHei UI";
+    font-size: 40px;
+    color:#999;
+}
+div.logo{
+    height:30px;
+    line-height: 30px;
+    font-family: "Microsoft YaHei UI";
+    font-size: 30px;
+    color:#999;
+    margin-top:10px;
+}
+div.userLogin{
+    height:14px;
+    line-height: 14px;
+    font-family: "Microsoft YaHei UI";
+    font-size: 14px;
+    color:#666;
+    margin-top:80px;
+}
+div.line{
+    width:40px;
+    height:4px;
+    margin:10px 0 10px 8px;
+    background-color: #6a8fd4;
+}
+input,button{
+    border:none;
+    outline: none;
+}
+.loginContent form>input{
+    width:400px;
+    height:50px;
+    font-family: "Microsoft YaHei UI";
+    font-size: 14px;
+    color: #666;
+    background-color: #f2f2f2;
+    margin-top:20px;
+    padding-left: 20px;
+}
+.rememberPassword{
+    float: left;
+    margin-top:50px;
+    float:left;
+}
+#check{
+    display: block;
+    float:left;
+    cursor: pointer;
+}
+.rememberPassword span{
+    display: block;
+    float:left;
+    font-size: 14px;
+    color:#999;
+}
+.login{
+    width:150px;
+    height:50px;
+    font-size: 14px;
+    color:#fff;
+    float: right;
+    margin-top: 30px;
+    background-color: #6a8fd4;
+    cursor: pointer;
+    text-align: center;
+    padding-top: 15px;
+}
+input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0px 1000px white inset !important;//关于解决输入框背景颜色
+    -webkit-text-fill-color: rgba(255,255,255,10)!important;//关于接输入框文字颜色
+}
+

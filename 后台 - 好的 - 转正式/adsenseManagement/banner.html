@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title>banner管理</title>
+
+    <!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html" />
+    <![endif]-->
+    <link href="../css/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+    <link href="../css/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+    <link href="../css/bootstrap-select.min.css" rel="stylesheet">
+    <link href="../css/animate.min.css" rel="stylesheet">
+    <link href="../css/frame.style.css" rel="stylesheet">
+</head>
+<body>
+<div class="bannerContainer" id="container">
+    <div class="line"></div>
+    <div class="frame-header">
+        <span>广告位管理</span>
+        <span>-</span>
+        <span>banner管理</span>
+    </div>
+    <div class="tagList">
+        <div class="btn btn-default" id="addBanner">新增banner</div>
+        <div class="tableBox">
+            <table class="table table-bordered" id="goodTable"
+                   data-pagination="true">
+                <thead>
+                <tr class="active tableHeader">
+                    <th data-field="img">图片</th>
+                    <th data-field="sort">排序</th>
+                    <th data-field="operate">操作</th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="bannerContainer" id="addContainer">
+    <div class="line"></div>
+    <div class="frame-header">
+        <span>广告位管理</span>
+        <span>-</span>
+        <span>banner管理</span>
+        <span>-</span>
+        <span id="addOrEdit" style="color: #000;">新增Banner</span>
+        <div class="back">返回上一级</div>
+    </div>
+    <form class="addContent" role="form" enctype="multipart/form-data">
+        <div class="form-group">
+            <span>*图片</span><br>
+            <img id="bannerImg" src="../img/img.png" alt="">
+        </div>
+        <div class="form-group">
+            <input type = "file" id="uploadImg" title="上传新照片" accept="image/jpg, image/jpeg,img/png" style="display: none"/>
+            <div id="upload" class="btn btn-default">上传新照片</div>
+            <span style="font-family: 微软雅黑;font-size: 12px;">&nbsp;&nbsp;仅支持JPG、JPEG、PNG格式的图片文件，文件不能大于2MP(剪裁成750x350)</span>
+        </div>
+        <div class="form-group">
+            <span>*分类</span><br>
+            <div class="controls">
+                <select name="classify" id="classify">
+                    <option value="2">古玩城</option>
+                    <option value="1">网址</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group addressDiv">
+            <span>*地址</span><br>
+            <select name="province" id="province">省
+                <option value="0">省</option>
+            </select>
+            <select name="city" id="city">市
+                <option value="0">市</option>
+            </select>
+            <select name="curio" id="curio" style="width:222px;">古玩城
+                <option value="0">古玩城</option>
+            </select>
+        </div>
+        <div class="form-group urlDiv" style="display: none">
+            <span>*网址</span><br>
+            <input type="text" id="urlAddress" style="width:470px;height:32px;border:1px solid #e6e6e6;color:#999;padding-left:6px;outline: none;text-decoration: none;">
+        </div>
+        <input type="text" id="title" placeholder="输入广告名" style="width:470px;height:32px;border:1px solid #e6e6e6;color:#999;padding-left:6px;margin-top:10px;outline: none;text-decoration: none;">
+        <div class="form-group">
+            <div id="submit" class="btn btn-default">提交</div>
+        </div>
+    </form>
+</div>
+<script src="../js/jquery.min.js?v=2.1.4"></script>
+<script src="../js/jquery.cookie.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script src="../js/content.min.js"></script>
+<script src="../js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="../js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+<script src="../js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="../js/demo/bootstrap-table-demo.min.js"></script>
+<script type="text/javascript" src="http://tajs.qq.com/stats?sId=9051096" charset="UTF-8"></script>
+<script src="../js/bootstrap-select.min.js"></script>
+<script src="../js/ajaxfileupload.js"></script>
+<script src="../js/banner.js"></script>
+</body>
+</html>

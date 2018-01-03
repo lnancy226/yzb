@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title>古玩城管理</title>
+
+    <!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html" />
+    <![endif]-->
+    <link href="../css/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+    <link href="../css/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+    <link href="../css/animate.min.css" rel="stylesheet">
+    <link href="../css/frame.style.css" rel="stylesheet">
+</head>
+<body>
+<div id="container" class="curioContainer">
+    <div class="line"></div>
+    <div class="frame-header">
+        <span>商户管理</span>
+        <span class="minus">-</span>
+        <span>古玩城管理</span>
+    </div>
+    <div class="tagList">
+        <div class="table-header">
+            <div class="btn btn-default" id="addCurio" style="float: left;">新增古玩城</div>
+            <div style="float: right;">
+                <select name="province" class="search-term f-province">省
+                    <option value="0">省</option>
+                </select>
+                <select name="province" class="search-term f-city">市
+                    <option value="0">市</option>
+                </select>
+                <select name="tag" class="search-term">标签
+                    <option value="0">标签</option>
+                </select>
+                <select name="status" class="search-term">状态
+                    <option value="0">状态</option>
+                </select>
+                <input type="text">
+                <button><img src="../img/zoom.png" alt=""></button>
+            </div>
+        </div>
+        <div class="panel panel-info tableBox">
+            <div class="panel-body">
+                <table id="table-javascript"
+                       class="table table-hover table-responsive ">
+                    <thead>
+                    <th><div class="th-inner">古玩城名称</div></th>
+                    <th><div class="th-inner">省</div></th>
+                    <th><div class="th-inner ">市</div></th>
+                    <th><div class="th-inner ">地址</div></th>
+                    <th><div class="th-inner ">状态</div></th>
+                    <th><div class="th-inner ">操作</div></th>
+                    </thead>
+                    <tbody id="dataTable"></tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row-fluid">
+        <div  style="float: left;">
+            <div id="DataTables_Table_0_info" class="dataTables_info">显示第 <span id="from">1</span> 至 <span id="to">10</span> 项记录，共 <span id="total"></span>项</div>
+        </div>
+        <ul id="pageNum" class="pagination" style="float: right;margin:0;"></ul>
+    </div>
+    </div>
+</div>
+<div class="curioContainer " id="addContainer" style="background-color: #f3f3f4;">
+    <div class="line"></div>
+    <div id="frame-header" class="frame-header" style="background-color: #fff;">
+        <span>商户管理</span>
+        <span>-</span>
+        <span>古玩城管理</span>
+        <span>-</span>
+        <span id="addOrEdit" style="color: #000;">新增古玩城</span>
+        <div class="back">返回上一级</div>
+    </div>
+    <div class="curioForm">
+        <div class="base-data">
+            <div class="line"></div>
+            <div class="base-header">基本资料</div>
+            <div class="base-line"></div>
+            <form role="form" enctype="multipart/form-data" style="padding-left:20px;">
+                <div class="form-group">
+                    <label>*古玩城名称</label><br>
+                    <input id="b-curioName" type="text" style="width:470px;">
+                </div>
+                <div class="form-group">
+                    <label>*简介</label><br>
+                    <textarea name="summary" class="summary" cols="30" rows="10"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>*楼层分布</label><br>
+                    <input type="text" class="floor" placeholder="例：1、2、3、4、5" style="width:470px;">
+                </div>
+                <div class="form-group">
+                    <label>*地址坐标</label><br>
+                    <select name="province" id="province" style="width:120px;">省
+                        <option value="0">省</option>
+                    </select>
+                    <select name="city" id="city" style="width:120px;">市
+                        <option value="0">市</option>
+                    </select>
+                    <input type="text" class="detailAddress" placeholder="详细地址" style="width:220px;">
+                </div>
+                <div class="form-group">
+                    <input type="text" class="detailCoordinate" placeholder="详细坐标" style="width:470px;">
+                    <a href="http://api.map.baidu.com/lbsapi/getpoint/index.html" target="_blank" style="color:#337ab7;cursor: pointer">&nbsp;拾取坐标</a>
+                </div>
+            </form>
+        </div>
+        <div class="picture-data">
+            <div class="line"></div>
+            <div class="base-header">图片资料</div>
+            <div class="base-line"></div>
+            <form role="form" enctype="multipart/form-data" style="padding-left:20px;">
+                <div class="form-group">
+                    <span>*门头照片</span><br>
+                    <img id="bannerImg" src="../img/img.png" alt="" style = "width:250px;">
+                </div>
+                <div class="form-group">
+                    <input type = "file" id="uploadBannerImg" title="上传新照片" accept="image/jpg, image/jpeg,img/png" style="display: none"/>
+                    <div id="uploadBanner" class="btn btn-default" style="width:120px;color:#fff;background-color:#67738d;">上传新照片</div>
+                    <span style="font-family: 微软雅黑;font-size: 12px;">&nbsp;&nbsp;仅支持JPG、JPEG、PNG格式的图片文件，文件不能大于2MP(剪裁成750x350)</span>
+                </div>
+                <div class="form-group" id="innerImgBox">
+                    <span>*店内照片</span><br>
+                </div>
+                <div class="form-group">
+                    <input type = "file" id="uploadInnerImg" title="上传新照片" accept="image/jpg, image/jpeg,img/png" style="display: none"/>
+                    <div id="uploadInner" class="btn btn-default" style="width:120px;color:#fff;background-color:#67738d;">上传新照片</div>
+                    <span style="font-family: 微软雅黑;font-size: 12px;">&nbsp;&nbsp;仅支持JPG、JPEG、PNG格式的图片文件，文件不能大于2MP,最多上传8张</span>
+                </div>
+                <div class="form-group">
+                    <label>*地图图标</label><br>
+                    <img id="mapImg" src="../img/map-img.png" alt=""style="width:100px;">
+                </div>
+                <div class="form-group">
+                    <input type = "file" id="uploadMapImg" title="上传新照片" accept="image/jpg, image/jpeg,img/png" style="display: none"/>
+                    <div id="uploadMap" class="btn btn-default" style="width:120px;color:#fff;background-color:#67738d;">上传新照片</div>
+                    <span style="font-family: 微软雅黑;font-size: 12px;">&nbsp;&nbsp;仅支持JPG、JPEG、PNG格式的图片文件，文件不能大于2MP</span>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div id="submitCurio">提交</div>
+</div>
+
+<script src="../js/jquery.min.js?v=2.1.4"></script>
+<script src="../js/jquery.cookie.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script src="../js/content.min.js"></script>
+<script src="../js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="../js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+<script src="../js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="../js/demo/bootstrap-table-demo.min.js"></script>
+<script type="text/javascript" src="http://tajs.qq.com/stats?sId=9051096" charset="UTF-8"></script>
+<script>
+    var Authorization = $.cookie("Authorization");  //全局token
+    requestCurioData();        //获取首页数据
+    function requestCurioData(proviceId){
+        $("#pageNum").html("");
+        $("#addContainer").hide();
+        var curioData;
+        if(proviceId == undefined){
+            curioData = JSON.stringify({
+                pageNum:1
+            });
+        }else{
+            curioData = JSON.stringify({
+                pageNum:1,
+                proviceId:proviceId
+            });
+        }
+        $.ajax({
+            type:"put",
+            url:"http://116.62.131.70:8081/roo-sys-web/rooCuriocity/read/page",
+            beforeSend: function (request) {
+                request.setRequestHeader("Authorization", Authorization);
+            },
+            contentType: "application/json;charset=utf-8",
+            dataType:"JSON",
+            data:curioData,
+            success:function(data){
+                if(data.httpCode == 200){
+                    console.log(data,"古玩城管理");
+                    //调用创建表和填充动态填充数据的方法.
+                    createShowingTable(data,1);
+                    page(data.pages,proviceId);                   //翻页功能
+                }
+            }
+        });
+    }
+    //动态的创建一个table，同时将后台获取的数据动态的填充到相应的单元格
+    function createShowingTable(data,page){
+        $("#curioManage tbody").remove();
+        var _data = data.data;
+        var tableStr = "";
+        $.each(_data,function(index,value){
+            var enable = !!value.enable ? "正常" : "已关闭";
+            var status = !!value.enable ? "关闭" : "开启";
+            tableStr = tableStr + "<tr><td>" + value.curiocityName
+                + "</td>" + "<td>" + value.proviceName + "</td>"
+                + "<td>" + value.cityName + "</td>"
+                + "<td>" + value.curiocityAddress + "</td>"
+                + "<td abbr='"+ value.enable +"'>" + enable + "</td>"
+                + "<td><a onclick=closeOrOpenCurio($(this),'"+ value.id +"') style='color:#bda34a;cursor: pointer;' >"+ status +"</a>" +
+                "<span>&nbsp;&nbsp;</span><a onclick=edit('"+ value.id +"') style='color:#bda34a;cursor: pointer;' >编辑</a><span>&nbsp;&nbsp;</span>" +
+                "<a onclick=deleteCurio($(this),'"+ value.id +"') style='color:#bda34a;cursor: pointer;'>删除</a></td></tr>";
+        });
+        //将动态生成的table添加的事先隐藏的div中.
+        data.total ? $("#dataTable").html(tableStr) : $("#dataTable").html("<div style='color:red;'>暂无古玩城</div>");
+        //显示的记录
+        $("#total").html(data.total);              //总共多少条数据
+        data.total ? $("#from").html(page*10-9) :  $("#from").html(0);
+        var num = Math.ceil(data.total/10);
+        page < num ? $("#to").html(page*10) : $("#to").html(data.total);
+    }
+
+    //翻页功能
+    function page(pages,proviceId){
+        $("#pageNum").append("<li value=0><a>&laquo;</a></li>");
+        for(i=1;i<=pages;i++){
+            $("#pageNum").append("<li value='"+ i +"' onclick=requestNextData($(this),"+ i +",'"+ proviceId +"')><a style='cursor: pointer;')>"+ i +"</a></li>")
+        }
+        $("#pageNum").append("<li value="+ pages+1 +"><a>&raquo;</a></li>");
+    }
+
+    //下一页数据
+    function requestNextData(obj,page,proviceId){
+        var nextcurioData;
+        if(proviceId == "undefined"){
+            nextcurioData = JSON.stringify({
+                pageNum:page
+            });
+        }else{
+            nextcurioData = JSON.stringify({
+                pageNum:page,
+                proviceId:proviceId
+            });
+        }
+        console.log(nextcurioData,"nextcurioData");
+        $.ajax({
+            type:"put",
+            url:"http://116.62.131.70:8081/roo-sys-web/rooCuriocity/read/page",
+            beforeSend: function (request) {
+                request.setRequestHeader("Authorization",Authorization);
+            },
+            contentType: "application/json;charset=utf-8",
+            dataType:"JSON",
+            data:nextcurioData,
+            success:function(data){
+                console.log(data,"古玩城翻页");
+                if(data.httpCode == 200){
+                    createShowingTable(data,page);
+                    obj.addClass("active").siblings().removeClass("active");  //点击后按钮颜色改变
+                }
+            }
+        })
+    }
+    //**************************************点击新增古玩城*****************************************************//
+    $("#addCurio").click(function(){
+        $(".curioContainer").hide();
+        $("#addContainer").show();
+        province();     //获取省份
+        addCurio();
+    });
+    //点击返回上一级
+    $(".back").click(function(){
+        $(".curioContainer").show();
+        $("#addContainer").hide();
+    });
+    //上传门头照片
+    $("#uploadBanner").click(function(){
+        $("#uploadBannerImg").click();
+    });
+    //上传店内照片
+    $("#uploadInner").click(function(){
+        if($("#innerImgBox img").length < 8){
+            $("#uploadInnerImg").click();
+        }else{
+            alert("最多上传8张");
+            return;
+        }
+    });
+    //上传地图图标图片
+    $("#uploadMap").click(function(){
+        $("#uploadMapImg").click();
+    });
+    //选择省份
+    function province(){
+        var provinceData = JSON.stringify({
+            parentId:0
+        });
+        $.ajax({
+            type:"put",
+            url:"http://116.62.131.70:8081/roo-sys-web/cnarea/read/list",
+            contentType: "application/json;charset=utf-8 ",
+            data:provinceData,
+            dataType: "JSON",
+            beforeSend: function (request) {
+                request.setRequestHeader("Authorization", Authorization);
+            },
+            success:function(data){
+                console.log(data,"省");
+                $.each(data.data,function(index,value){
+                    $("#province").append("<option value=" + value.id + ">" + value.mergerName + "</option>");    //取到所有省份并将其导入到select中
+                });
+                //当省份更改的时候调取到相应市的数据
+                $("#province").change(function () {
+                    var provinceId = $(this).find("option:selected").val();
+                    var cityData = JSON.stringify({
+                        parentId:provinceId
+                    });
+                    $("#city").find("option").remove();
+                    requestCityData(cityData);
+                });
+            }
+        })
+    }
+    //获取当前省份下市的数据，封装好的函数
+    function requestCityData(cityData){
+        $.ajax({
+            type:"put",
+            url:"http://116.62.131.70:8081/roo-sys-web/cnarea/read/list",
+            contentType: "application/json;charset=utf-8 ",
+            dataType: "JSON",
+            data:cityData,
+            beforeSend: function (request) {
+                request.setRequestHeader("Authorization", Authorization);
+            },
+            success:function(data){
+                console.log(data,"市");
+                $.each(data.data,function(index,value){
+                    $("#city").append("<option value=" + value.id + ">" + value.name + "</option>");  //取到当前省份下的市并将其导入到select中
+                });
+            }
+        })
+    }
+    //上传门头照片
+    function ProcessBannerFile( e ) {
+        var file = document.getElementById('uploadBannerImg').files[0];
+        var img = document.getElementById("bannerImg");
+        var fd = new FormData();//创建一个fromdata
+        fd.append("file",file); //将参数名与参数值以key value形式组合起来
+        $.ajax({
+            type: "post",
+            url: "http://116.62.131.70:8081/roo-sys-web/image",
+            contentType: false,
+            processData: false,
+            file:file,
+            dataType: "JSON",
+            data:fd,
+            success:function(data){
+                img.src = data.data.url;
+            }
+        });
+    }
+    function BannerLoaded() {
+        document.getElementById('uploadBannerImg').addEventListener( 'change' ,
+            ProcessBannerFile , false );
+    }
+    BannerLoaded();
+    //上传店内照片
+    function ProcessInnerFile(){
+        var file = document.getElementById('uploadInnerImg').files[0];
+        var fd = new FormData();//创建一个fromdata
+        fd.append("file",file); //将参数名与参数值以key value形式组合起来
+        $.ajax({
+            type: "post",
+            url: "http://116.62.131.70:8081/roo-sys-web/image",
+            contentType: false,
+            processData: false,
+            file:file,
+            dataType: "JSON",
+            data:fd,
+            success:function(data){
+                $("#innerImgBox").append("<img src='"+ data.data.url +"' style='width:80px;'>");
+            }
+        });
+    }
+    function InnerLoaded() {
+        document.getElementById('uploadInnerImg').addEventListener( 'change' ,
+            ProcessInnerFile , false );
+    }
+    InnerLoaded();
+    //上传地图图标
+    function ProcessMapFile(){
+        var file = document.getElementById('uploadMapImg').files[0];
+        var img = document.getElementById('mapImg');
+        var fd = new FormData();//创建一个fromdata
+        fd.append("file",file); //将参数名与参数值以key value形式组合起来
+        $.ajax({
+            type: "post",
+            url: "http://116.62.131.70:8081/roo-sys-web/image",
+            contentType: false,
+            processData: false,
+            file:file,
+            dataType: "JSON",
+            data:fd,
+            success:function(data){
+                img.src = data.data.url;
+            }
+        });
+    }
+    function MapLoaded() {
+        document.getElementById('uploadMapImg').addEventListener( 'change',
+            ProcessMapFile , false );
+    }
+    MapLoaded();
+    //**************************新增提交*********************************//
+    function addCurio(){
+        $("#submitCurio").click(function(){
+            var innerArray = [];
+            var floorArray = $(".floor").val().split(",");
+            $("#innerImgBox img").each(function(index,value){
+                var src=$(value).attr("src");
+                innerArray.push(src);
+            });
+            console.log($(".detailAddress").val());
+            var sunbmitData = JSON.stringify({
+                proviceId:$("#province").find("option:selected").val(),
+                cityId:$("#city").find("option:selected").val(),
+                curiocityAddress:$(".detailAddress").val(),
+                curiocityBanner:$("#bannerImg").attr("src"),
+                curiocityFloorList:floorArray,
+                curiocityLogo:$("#mapImg").attr("src"),
+                curiocityName:$("#b-curioName").val(),
+                curiocitySlideList:innerArray,
+                remark:$(".summary").val(),
+                lat:$(".detailCoordinate").val().split(",")[1],
+                lng:$(".detailCoordinate").val().split(",")[0]
+            });
+            console.log(sunbmitData,"sunbmitData");
+            $.ajax({
+                type:"put",
+                url:"http://116.62.131.70:8081/roo-sys-web/rooCuriocity",
+                contentType: "application/json;charset=utf-8",
+                data:sunbmitData,
+                dataType: "JSON",
+                beforeSend: function (request) {
+                    request.setRequestHeader("Authorization", Authorization);
+                },
+                success:function(data){
+                    console.log(data,"新增古玩城");
+                    if(data.httpCode == 200){
+                        window.location.reload();
+                    }
+                }
+            });
+        });
+    }
+
+    //**************************编辑古玩城*********************************//
+    function edit(id){
+        $("#addContainer").show();
+        $("#container").hide();
+        $.ajax({
+            type:"get",
+            url:"http://116.62.131.70:8081/roo-sys-web/rooCuriocity/"+id,
+            contentType: "application/json;charset=utf-8",
+            dataType: "JSON",
+            beforeSend: function (request) {
+                request.setRequestHeader("Authorization", Authorization);
+            },
+            success:function(data){
+                console.log(data,"古玩城详情");
+                if(data.httpCode == 200){
+                    $("#b-curioName").val(data.data.curiocityName);
+                    $(".summary").val(data.data.remark);
+                    $(".floor").val(data.data.curiocityFloorList);
+                    Province($("#province"),data.data.proviceId,data.data.cityId);
+                    $(".detailAddress").val(data.data.curiocityAddress);
+                    $(".detailCoordinate").val(data.data.lng + "," +data.data.lat);
+                    $("#bannerImg").attr("src",data.data.bannerFile.url);
+                    $.each(data.data.rooFileList,function(index,value){
+                        $("#innerImgBox").append("<img src='"+ value.url +"' style='width:80px;'>&nbsp;");
+                    });
+                    $("#mapImg").attr("src",data.data.logoFile.url);
+                    //编辑提交
+                    $("#submitCurio").click(function(){
+                        var innerArray = [],floor = $(".floor").val().split(",");
+                        $("#innerImgBox img").each(function(index,value){
+                            var src=$(value).attr("src");
+                            innerArray.push(src);
+                        });
+                        var submitData = JSON.stringify({
+                            id:data.data.id,
+                            curiocityName:$("#b-curioName").val(),
+                            remark:$(".summary").val(),
+                            lat:$(".detailCoordinate").val().split(",")[1],
+                            lng:$(".detailCoordinate").val().split(",")[0],
+                            provice_id:$("#province").val(),
+                            cityId:$("#city").val(),
+                            curiocityAddress:$(".detailAddress").val(),
+                            curiocityFloorList: floor,
+                            curiocityBanner: $("#bannerImg").attr("src"),
+                            curiocityLogo:$("#mapImg").attr("src"),
+                            curiocitySlideList:innerArray
+                        });
+                        $.ajax({
+                            type:"put",
+                            url:"http://116.62.131.70:8081/roo-sys-web/rooCuriocity",
+                            contentType: "application/json;charset=utf-8",
+                            data:submitData,
+                            dataType: "JSON",
+                            beforeSend: function (request) {
+                                request.setRequestHeader("Authorization", Authorization);
+                            },
+                            success:function(data){
+                                console.log(data,"古玩城编辑");
+                                if(data.httpCode == 200){
+                                    window.location.reload();
+                                }
+                            }
+                        });
+                    })
+                }
+            }
+        })
+    }
+
+    //**************************删除古玩城*********************************//
+    function deleteCurio(obj,id){
+        var idData = JSON.stringify({
+            id:id
+        });
+        $.ajax({
+            type:"delete",
+            url:"http://116.62.131.70:8081/roo-sys-web/rooCuriocity/"+id,
+            contentType: "application/json;charset=utf-8",
+            data:idData,
+            dataType: "JSON",
+            beforeSend: function (request) {
+                request.setRequestHeader("Authorization", Authorization);
+            },
+            success:function(data){
+                console.log(data,"删除古玩城");
+                if(data.httpCode == 200){
+                    $(obj).parents("tr").remove();
+                    window.location.reload();
+                }
+            }
+        });
+    }
+
+    //**************************开启或者关闭古玩城*********************************//
+    function closeOrOpenCurio(obj,id){
+        obj.toggle(
+            closeCurio(id),
+            openCurio(id)
+        )
+    }
+
+    //**************************关闭古玩城*********************************//
+    function closeCurio(id){
+        var idData = JSON.stringify({
+            id:id
+        });
+        $.ajax({
+            type:"put",
+            url:"http://116.62.131.70:8081/roo-sys-web/rooCuriocity/off/"+id,
+            contentType: "application/json;charset=utf-8",
+            data:idData,
+            dataType: "JSON",
+            beforeSend: function (request) {
+                request.setRequestHeader("Authorization", Authorization);
+            },
+            success:function(data){
+                console.log(data,"关闭古玩城");
+                if(data.httpCode == 200){
+                    window.location.reload();
+                }
+            }
+        });
+    }
+
+    //**************************开启古玩城*********************************//
+    function openCurio(id){
+        var idData = JSON.stringify({
+            id:id
+        });
+        $.ajax({
+            type:"put",
+            url:"http://116.62.131.70:8081/roo-sys-web/rooCuriocity/on/"+id,
+            contentType: "application/json;charset=utf-8",
+            data:idData,
+            dataType: "JSON",
+            beforeSend: function (request) {
+                request.setRequestHeader("Authorization", Authorization);
+            },
+            success:function(data){
+                console.log(data,"开启古玩城");
+                if(data.httpCode == 200){
+                    window.location.reload();
+                }
+            }
+        });
+    }
+
+    //**************************古玩城筛选*********************************//
+    filterProvince();
+    $(".f-province").change(function () {
+        var proviceId = $(this).find("option:selected").val();
+        requestCurioData(proviceId);
+    });
+    function filterProvince(){
+        var provinceData = JSON.stringify({
+            parentId:0
+        });
+        $.ajax({
+            type:"put",
+            url:"http://116.62.131.70:8081/roo-sys-web/cnarea/read/list",
+            contentType: "application/json;charset=utf-8 ",
+            data:provinceData,
+            dataType: "JSON",
+            beforeSend: function (request) {
+                request.setRequestHeader("Authorization", Authorization);
+            },
+            success:function(data){
+                console.log(data,"省");
+                $.each(data.data,function(index,value){
+                    $(".f-province").append("<option value=" + value.id + ">" + value.mergerName + "</option>");    //取到所有省份并将其导入到select中
+                });
+            }
+        })
+    }
+
+    //省市
+    function Province(provinceObj,proviceId,cityId){
+        var provinceData = JSON.stringify({
+            parentId:0
+        });
+        $.ajax({
+            type:"put",
+            url:"http://116.62.131.70:8081/roo-sys-web/cnarea/read/list",
+            contentType: "application/json;charset=utf-8 ",
+            data:provinceData,
+            dataType: "JSON",
+            beforeSend: function (request) {
+                request.setRequestHeader("Authorization", Authorization);
+            },
+            success:function(data){
+                console.log(data,"省");
+                $.each(data.data,function(index,value){
+                    provinceObj.append("<option value='" + value.id + "'>" + value.mergerName + "</option>");    //取到所有省份并将其导入到select中
+                });
+                $("#province option[value="+ proviceId +"]").attr("selected","selected");
+                var cityData = JSON.stringify({
+                    parentId: $("#province").find("option:selected").val()
+                });
+                requestCityData(cityData,cityId);
+                //当省份更改的时候调取到相应市的数据
+                provinceObj.change(function () {
+                    var provinceId = $(this).find("option:selected").val();
+                    var cityData = JSON.stringify({
+                        parentId:provinceId
+                    });
+                    $("#city").find("option").remove();
+                    requestCityData(cityData);
+                });
+            }
+        })
+    }
+    //获取当前省份下市的数据，封装好的函数
+    function requestCityData(cityData,cityId){
+        var a = cityId;
+        $.ajax({
+            type:"put",
+            url:"http://116.62.131.70:8081/roo-sys-web/cnarea/read/list",
+            contentType: "application/json;charset=utf-8 ",
+            dataType: "JSON",
+            data:cityData,
+            beforeSend: function (request) {
+                request.setRequestHeader("Authorization", Authorization);
+            },
+            success:function(data){
+                console.log(data,"市");
+                $.each(data.data,function(index,value){
+                    $("#city").append("<option value=" + value.id + ">" + value.name + "</option>");  //取到当前省份下的市并将其导入到select中
+                });
+                $("#city option[value='"+ a +"']").attr("selected","selected");
+            }
+        })
+    }
+</script>
+</body>
+</html>

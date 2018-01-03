@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title>热门城市</title>
+
+    <!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html" />
+    <![endif]-->
+    <link href="../css/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+    <link href="../css/bootstrap-table.css" rel="stylesheet">
+    <link href="../css/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+    <link href="../css/animate.min.css" rel="stylesheet">
+    <link href="../css/frame.style.css" rel="stylesheet">
+</head>
+<body>
+<div class="bannerContainer" id="container">
+    <div class="line"></div>
+    <div class="frame-header">
+        <span>标签管理</span>
+        <span>-</span>
+        <span>热门城市</span>
+    </div>
+    <div class="tagList">
+        <div class="btn btn-default" id="addTag">新增标签</div>
+        <div class="tableBox">
+            <table class="table table-bordered" id="goodTable"
+                   data-pagination="true">
+                <thead>
+                <tr class="active tableHeader">
+                    <th data-field="shortName">标签名称</th>
+                    <th data-field="sort">排序</th>
+                    <th data-field="operate">操作</th>
+                </tr>
+                </thead>
+                <tbody id="dataTable"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script src="../js/jquery.min.js?v=2.1.4"></script>
+<script src="../js/jquery.cookie.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script src="../js/content.min.js"></script>
+<script src="../js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="../js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+<script src="../js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="../js/demo/bootstrap-table-demo.min.js"></script>
+<script type="text/javascript" src="http://tajs.qq.com/stats?sId=9051096" charset="UTF-8"></script>
+
+<script>
+    var cityId;
+    $(function(){
+        var shortName = [];
+        var dataObj = {};
+        var jsonData;
+        var Authorization = $.cookie("Authorization");
+        $.ajax({
+            type:"get",
+            url:"http://120.27.226.156:8080/roo-sys-web/cnarea/hotArea",
+            beforeSend: function (request) {
+                request.setRequestHeader("Authorization", Authorization);
+            },
+            dataType:"JSON",
+            success:function(data){
+                if(data.httpCode == 200){
+                    console.log(data,"热门城市");
+                    $.each(data.data,function(index,value){
+                        dataObj = {
+                            "shortName":value.shortName,
+                            //"sort":"<input type='text' value='" + value.sortNo + "' style='width:40px;text-align:center;' onchange=sortBanner('" + value.id + "'," + value.content.type + ",'" + value.advTitle + "','" + value.content.picUrl + "',$(this).val(),'" + value.content.typeValue + "') />",
+                            "operate":"tt"
+                        };
+                        cityId = value.id;/////
+                        jsonData= JSON.parse(JSON.stringify(dataObj));
+                        shortName.push(jsonData);
+                    });
+                    console.log(shortName);
+                    $("#goodTable").bootstrapTable({
+                        data: shortName,
+                        pageNumber: 1,
+                        pageSize: 5,
+                        pageList: [5, 10, 20],
+                        bPaginate: true, //翻页功能
+                        paginationLoop: false,
+                        paginationPreText: '上一页',
+                        paginationNextText: '下一页',
+                        showColumns: true,
+                        exportDataType: "selected",
+                        sidePagination: "client",
+                        clickToSelect: true,
+                        detailView: false,
+                        minimunCountColumns: 2,
+                        onPageChange: function (number, size) {
+                            $(".pagination").css("margin-top", "0px");
+                        },
+                        columns : [
+                            {
+                                title : '标签名称'
+                            },{
+                                title : '排序',
+                                width : 300,
+                                formatter: function(){
+                                    return '<img src="../img/upsort.png" style="cursor: pointer;" ><img src="../img/downsort.png" style="cursor: pointer;">';
+                                }
+                            }, {
+                                title : '操作',
+                                formatter:function(){
+//                                    return '<a style="color:#bda34a;cursor: pointer;">编辑</a><span>&nbsp;&nbsp;</span><a style="color:#bda34a;cursor: pointer;">删除</a>'
+                                    return '<a style="color:#bda34a;cursor: pointer;">删除</a>'
+                                }
+                            }  ]
+                    })
+                }
+            }
+        });
+
+        $("#addTag").click(function () {
+            addTag();
+        });
+
+
+
+        //*********************************排序********************************//
+        /*function sortBanner(id,type,advTitle,picUrl,sortNo,typeValue){
+         var Authorization= $.cookie("Authorization");
+         var idData = JSON.stringify({
+         id:id,
+         type:type,
+         advTitle:advTitle,
+         picUrl:picUrl,
+         sortNo:sortNo,
+         typeValue:typeValue
+         });
+         $.ajax({
+         type:"put",
+         url:"http://120.27.226.156:8080/roo-sys-web/adv",
+         contentType: "application/json;charset=utf-8",
+         data:idData,
+         dataType: "JSON",
+         beforeSend: function (request) {
+         request.setRequestHeader("Authorization", Authorization);
+         },
+         success:function(data){
+         if(data.httpCode == 200){
+         console.log("排序成功");
+         $(this).val(sortNo);
+         window.location.reload();
+         }
+         }
+         });
+         }*/
+    });
+
+    //        新增标签
+    function addTag(){
+        $("#container").hide();
+        $("#baiduTag").show();
+//        matchShopTag();                  //匹配店铺标签数据填充
+        //定义需要的参数
+        var parentId;
+        //选择分类
+//        parentId = parentIdW;
+        $("#tagClassify").change(function(){
+            if ($("#tagClassify").find("option:selected").val() == 1) {
+                parentId = parentIdW;
+            }
+            if ($("#tagClassify").find("option:selected").val() == 2) {
+                parentId = parentIdS;
+            }
+        });
+        //提交
+//        $("#submit").click(function() {
+//            var submitData = JSON.stringify({
+//                linkTagId:$("#linkShopTag").find("option:selected").val(),
+//                baiduTag:$("#baiduKeyword").val(),
+//                parentId:parentId,
+//                sortNo:$("#sortNo").val(),
+//                tagName:$("#tagName").val(),
+//                tagType:2
+//            });
+        $.ajax({
+            type: "post",
+            url: "http://120.27.226.156:8080/roo-sys-web/cnarea/hotArea",
+            contentType: "application/json;charset=utf-8 ",
+            data: cityId,/////
+            dataType: "JSON",
+            beforeSend: function (request) {
+                request.setRequestHeader("Authorization", Authorization);
+            },
+            success: function (data) {
+                console.log(data, "提交");
+                if (data.httpCode == 200) {
+                    alert("提交成功");
+                    $("#container").show();
+                    $("#baiduTag").hide();
+                    window.location.reload();
+                }
+            }
+        })
+    }
+
+</script>
+</body>
+</html>

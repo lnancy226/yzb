@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>登录</title>
+    <link href="css/login.min.css" rel="stylesheet">
+</head>
+<body class="bgImg">
+<div class="loginBox">
+    <div class="leftImg"></div>
+    <div class="loginContent">
+        <div class="welcome">Welcome</div>
+        <div class="logo">寻宝图</div>
+        <div class="userLogin">用户登录</div>
+        <div class="line"></div>
+        <form action="#" autocomplete="off">
+            <input id="uName" type="text" name="Username" placeholder="Username"><br>
+            <input id="pWord" type="text" name="Password" placeholder="Password">
+            <div class="rememberPassword">
+                <input type="checkbox" id="check"> </input><span>记住密码</span>
+            </div>
+            <div class="login">LOGIN</div>
+        </form>
+    </div>
+</div>
+</body>
+<script src="js/jquery-3.2.1.min.js"></script>
+<script src="js/jquery.cookie.js"></script>
+<script>
+    $(".login").click(function(){
+        //获取用户名称
+        var strTxtName = $("#uName").val();
+        //获取输入密码
+        var strTxtPass = $("#pWord").val();
+        if(strTxtName == "" || strTxtName == null ){
+            alert( "请先填写用户名！" );
+            return false;
+        }
+        if( strTxtPass == "" || strTxtPass == null ){
+            alert( "请填写密码！" );
+            return false;
+        }
+        var params = JSON.stringify({
+            account: $("#uName").val(),
+            password:$("#pWord").val()
+        });
+        $.ajax({
+            url:"http://116.62.131.70:8081/roo-sys-web/auth/token",
+            dataType:"json",
+            type:"POST",
+            contentType: "application/json;charset=utf-8",
+            data:params,
+            success:function(data){
+                if(data.httpCode == 200){
+                    console.log(data,"登录成功");
+                    $.cookie('account', data.user.account);
+                    $.cookie('userName', data.user.userName);
+                    var token = data.data.access_token;
+                    var token_type = data.data.token_type;
+                    var Authorization = token_type + " " + token;
+                    $.cookie("Authorization", Authorization);
+                    console.log($.cookie("Authorization"));
+                    window.location.href = "index.html";
+                }
+            },
+            error:function(data){
+                console.log(data,"登录失败");
+                alert("账号或密码错误");
+            }
+        })
+    })
+</script>
+</html>

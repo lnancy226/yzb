@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title>商铺管理</title>
+
+    <!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html" />
+    <![endif]-->
+    <link href="../css/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+    <link href="../css/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+    <link href="../css/animate.min.css" rel="stylesheet">
+    <link href="../css/frame.style.css" rel="stylesheet">
+</head>
+<body>
+<div id="container" class="curioContainer">
+    <div class="line"></div>
+    <div class="frame-header">
+        <span>商户管理</span>
+        <span class="minus">-</span>
+        <span>商铺管理</span>
+    </div>
+    <div class="tagList">
+        <div class="table-header">
+            <div style="float: right;">
+                <select name="province" class="search-term f-province">省
+                    <option value="0">省</option>
+                </select>
+                <select name="province" class="search-term f-city">市
+                    <option value="0">市</option>
+                </select>
+                <select name="tag" class="search-term">标签
+                    <option value="0">标签</option>
+                </select>
+                <select name="status" class="search-term">状态
+                    <option value="0">状态</option>
+                </select>
+                <input type="text">
+                <button><img src="../img/zoom.png" alt=""></button>
+            </div>
+        </div>
+        <div class="panel panel-info tableBox">
+            <div class="panel-body">
+                <table id="table-javascript"
+                       class="table table-hover table-responsive ">
+                    <thead>
+                    <th><div class="th-inner">所属用户</div></th>
+                    <th><div class="th-inner">店铺名称</div></th>
+                    <th><div class="th-inner ">省</div></th>
+                    <th><div class="th-inner ">市</div></th>
+                    <th><div class="th-inner ">所属古玩城</div></th>
+                    <th><div class="th-inner ">地址</div></th>
+                    <th><div class="th-inner ">联系方式</div></th>
+                    <th><div class="th-inner ">状态</div></th>
+                    <th><div class="th-inner ">操作</div></th>
+                    </thead>
+                    <tbody id="dataTable"></tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row-fluid">
+            <div  style="float: left;">
+                <div id="DataTables_Table_0_info" class="dataTables_info">显示第 <span id="from">1</span> 至 <span id="to">10</span> 项记录，共 <span id="total"></span>项</div>
+            </div>
+            <ul id="pageNum" class="pagination" style="float: right;margin:0;"></ul>
+        </div>
+    </div>
+</div>
+<div class="curioContainer " id="addContainer" style="background-color: #f3f3f4;">
+    <div class="line"></div>
+    <div id="frame-header" class="frame-header" style="background-color: #fff;">
+        <span>商户管理</span>
+        <span>-</span>
+        <span>商铺管理</span>
+        <span>-</span>
+        <span id="addOrEdit" style="color: #000;">编辑商铺</span>
+        <div class="back">返回上一级</div>
+    </div>
+    <div class="curioForm">
+        <div class="base-data">
+            <div class="line"></div>
+            <div class="base-header">基本资料</div>
+            <div class="base-line"></div>
+            <form role="form" enctype="multipart/form-data" style="padding-left:20px;">
+                <div class="form-group">
+                    <label>*店铺性质</label><br>
+                    <input id="shopType" type="text" style="width:470px;">
+                </div>
+                <div class="form-group">
+                    <label>*所属用户</label><br>
+                    <input id="belongUser" type="text" style="width:470px;">
+                </div>
+                <div class="form-group">
+                    <label>*店铺名称</label><br>
+                    <input id="shopName" type="text" style="width:470px;">
+                </div>
+                <div class="form-group">
+                    <label>*联系方式</label><br>
+                    <input id="shopTel" type="text" style="width:470px;">
+                </div>
+                <div class="form-group">
+                    <label>*简介</label><br>
+                    <textarea name="summary" class="summary" cols="30" rows="10"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>*地址坐标</label><br>
+                    <select name="province" id="province" style="width:120px;">省
+                        <option value="0">省</option>
+                    </select>
+                    <select name="city" id="city" style="width:120px;">市
+                        <option value="0">市</option>
+                    </select>
+                    <select name="city" id="curio" style="width:120px;">古玩城
+                        <option value="0">古玩城</option>
+                    </select>
+                    <select name="city" id="floor" style="width:98px;">楼层
+                        <option value=" ">其他</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <input type="text" class="detailCoordinate" placeholder="完整门牌号" style="width:470px;">
+                </div>
+            </form>
+        </div>
+        <div class="picture-data">
+            <div class="line"></div>
+            <div class="base-header">图片资料</div>
+            <div class="base-line"></div>
+            <form role="form" enctype="multipart/form-data" style="padding-left:20px;">
+                <div class="form-group">
+                    <span>*门头照片</span><br>
+                    <img id="bannerImg" src="../img/img.png" alt="" style = "width:250px;">
+                </div>
+                <div class="form-group">
+                    <input type = "file" id="uploadBannerImg" title="上传新照片" accept="image/jpg, image/jpeg,img/png" style="display: none"/>
+                    <div id="uploadBanner" class="btn btn-default" style="width:120px;color:#fff;background-color:#67738d;">上传新照片</div>
+                    <span style="font-family: 微软雅黑;font-size: 12px;">&nbsp;&nbsp;仅支持JPG、JPEG、PNG格式的图片文件，文件不能大于2MP(剪裁成750x350)</span>
+                </div>
+                <div class="form-group" id="innerImgBox">
+                    <span>*店内照片</span><br>
+                </div>
+                <div class="form-group">
+                    <input type = "file" id="uploadInnerImg" title="上传新照片" accept="image/jpg, image/jpeg,img/png" style="display: none"/>
+                    <div id="uploadInner" class="btn btn-default" style="width:120px;color:#fff;background-color:#67738d;">上传新照片</div>
+                    <span style="font-family: 微软雅黑;font-size: 12px;">&nbsp;&nbsp;仅支持JPG、JPEG、PNG格式的图片文件，文件不能大于2MP,最多上传8张</span>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div id="submitCurio">提交</div>
+</div>
+
+<script src="../js/jquery.min.js?v=2.1.4"></script>
+<script src="../js/jquery.cookie.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script src="../js/content.min.js"></script>
+<script src="../js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="../js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+<script src="../js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="../js/demo/bootstrap-table-demo.min.js"></script>
+<script type="text/javascript" src="http://tajs.qq.com/stats?sId=9051096" charset="UTF-8"></script>
+<script>
+    var Authorization = $.cookie("Authorization");  //全局token
+    requestShopData();        //获取首页数据
+    function requestShopData(proviceId){
+        $("#pageNum").html("");
+        $("#addContainer").hide();
+        var ShopData;
+        if(proviceId == undefined){
+            ShopData = JSON.stringify({
+                pageNum:1
+            });
+        }else{
+            ShopData = JSON.stringify({
+                pageNum:1,
+                proviceId:proviceId
+            });
+        }
+        $.ajax({
+            type:"put",
+            url:"http://120.27.226.156:8080/roo-sys-web/rooShop/read/page",
+            beforeSend: function (request) {
+                request.setRequestHeader("Authorization", Authorization);
+            },
+            contentType: "application/json;charset=utf-8",
+            dataType:"JSON",
+            data:ShopData,
+            success:function(data){
+                if(data.httpCode == 200){
+                    console.log(data,"店铺管理");
+                    //调用创建表和填充动态填充数据的方法.
+                    createShowingTable(data,1);
+                    page(data.pages,proviceId);                   //翻页功能
+                }
+            }
+        });
+    }
+    //动态的创建一个table，同时将后台获取的数据动态的填充到相应的单元格
+    function createShowingTable(data,page){
+        $("#curioManage tbody").remove();
+        var _data = data.data;
+        var tableStr = "";
+        $.each(_data,function(index,value){
+            var status = !value.shopState ? "已关闭" : !!(value.enable == 1) ? "正常" : "待审核";
+            var enable = !value.shopState ? "开启" : !!(value.shopState == 1) ? "关闭" : "审核";
+            var recommoned = value.recommoned ? "推荐" : "取消推荐";
+            var color = !value.recommoned ? "red" : "#bda34a";
+            var shopAddress = value.areaInfo.split(",")[2].split(" ")[0];
+            tableStr = tableStr + "<tr><td>" + value.memberName + "</td>"
+                + "<td>" + value.shopName + "</td>"
+                + "<td>" + value. proviceName + "</td>"
+                + "<td>" + value.cityName + "</td>"
+                + "<td>" + value.curiocityName + "</td>"
+                + "<td>" + shopAddress + "</td>"
+                + "<td>" + value.shopTel + "</td>"
+                + "<td>" + status + "</td>"
+                + "<td><a onclick=openOrClose($(this),'"+ value.id +"') style='color:#bda34a;cursor: pointer;' >"+ enable +"</a>" +
+                "<span>&nbsp;&nbsp;</span><a onclick=shopRecommendOperation($(this),'"+ value.id +"') style='color:"+ color +";cursor: pointer;' >"+ recommoned +"</a><span>&nbsp;&nbsp;</span>" +
+                "<span>&nbsp;&nbsp;</span><a onclick=edit('"+ value.id +"') style='color:#bda34a;cursor: pointer;' >编辑</a><span>&nbsp;&nbsp;</span>" +
+                "<a onclick=deleteShop($(this),'"+ value.id +"') style='color:#bda34a;cursor: pointer;'>删除</a></td></tr>";
+        });
+        //将动态生成的table添加的事先隐藏的div中.
+        data.total ? $("#dataTable").html(tableStr) : $("#dataTable").html("<div style='color:red;'>暂无店铺</div>");
+        //显示的记录
+        $("#total").html(data.total);              //总共多少条数据
+        data.total ? $("#from").html(page*10-9) :  $("#from").html(0);
+        var num = Math.ceil(data.total/10);
+        page < num ? $("#to").html(page*10) : $("#to").html(data.total);
+    }
+
+    //翻页功能
+    function page(pages,proviceId){
+        $("#pageNum").append("<li value=0><a>&laquo;</a></li>");
+        for(i=1;i<=pages;i++){
+            $("#pageNum").append("<li value='"+ i +"' onclick=requestNextData($(this),"+ i +",'"+ proviceId +"')><a style='cursor: pointer;')>"+ i +"</a></li>")
+        }
+        $("#pageNum").append("<li value="+ pages+1 +"><a>&raquo;</a></li>");
+    }
+
+    //下一页数据
+    function requestNextData(obj,page,proviceId){
+        var nextcurioData;
+        if(proviceId == "undefined"){
+            nextcurioData = JSON.stringify({
+                pageNum:page
+            });
+        }else{
+            nextcurioData = JSON.stringify({
+                pageNum:page,
+                proviceId:proviceId
+            });
+        }
+        $.ajax({
+            type:"put",
+            url:"http://120.27.226.156:8080/roo-sys-web/rooShop/read/page",
+            beforeSend: function (request) {
+                request.setRequestHeader("Authorization",Authorization);
+            },
+            contentType: "application/json;charset=utf-8",
+            dataType:"JSON",
+            data:nextcurioData,
+            success:function(data){
+                console.log(data,"古玩城翻页");
+                if(data.httpCode == 200){
+                    createShowingTable(data,page);
+                    obj.addClass("active").siblings().removeClass("active");  //点击后按钮颜色改变
+                }
+            }
+        })
+    }
+
+    //上传门头照片
+    function ProcessBannerFile( e ) {
+        var file = document.getElementById('uploadBannerImg').files[0];
+        var img = document.getElementById("bannerImg");
+        var fd = new FormData();//创建一个fromdata
+        fd.append("file",file); //将参数名与参数值以key value形式组合起来
+        $.ajax({
+            type: "post",
+            url: "http://120.27.226.156:8080/roo-sys-web/image",
+            contentType: false,
+            processData: false,
+            file:file,
+            dataType: "JSON",
+            data:fd,
+            success:function(data){
+                img.src = data.data.url;
+            }
+        });
+    }
+    function BannerLoaded() {
+        document.getElementById('uploadBannerImg').addEventListener( 'change' ,
+            ProcessBannerFile , false );
+    }
+    BannerLoaded();
+    //上传店内照片
+    function ProcessInnerFile(){
+        var file = document.getElementById('uploadInnerImg').files[0];
+        var fd = new FormData();//创建一个fromdata
+        fd.append("file",file); //将参数名与参数值以key value形式组合起来
+        $.ajax({
+            type: "post",
+            url: "http://120.27.226.156:8080/roo-sys-web/image",
+            contentType: false,
+            processData: false,
+            file:file,
+            dataType: "JSON",
+            data:fd,
+            success:function(data){
+                $("#innerImgBox").append("<img src='"+ data.data.url +"' style='width:80px;'>");
+            }
+        });
+    }
+    function InnerLoaded() {
+        document.getElementById('uploadInnerImg').addEventListener( 'change' ,
+            ProcessInnerFile , false );
+    }
+    InnerLoaded();
+    //**************************编辑店铺*********************************//
+   function edit(id){
+       $("#addContainer").show();
+       $("#container").hide();
+       //点击返回上一级
+       $(".back").click(function(){
+           $(".curioContainer").show();
+           $("#addContainer").hide();
+       });
+       //上传门头照片
+       $("#uploadBanner").click(function(){
+           $("#uploadBannerImg").click();
+       });
+       //上传店内照片
+       $("#uploadInner").click(function(){
+           if($("#innerImgBox img").length < 8){
+               $("#uploadInnerImg").click();
+           }else{
+               alert("最多上传8张");
+               return;
+           }
+       });
+       $.ajax({
+           type:"get",
+           url:"http://120.27.226.156:8080/roo-sys-web/rooShop/"+id,
+           contentType: "application/json;charset=utf-8",
+           dataType: "JSON",
+           beforeSend: function (request) {
+               request.setRequestHeader("Authorization", Authorization);
+           },
+           success:function(data){
+               console.log(data,"店铺详情");
+               if(data.httpCode == 200){
+                   var shopType = (data.data.shopType == 1) ? "古玩城店铺" : "古玩城柜台";
+                   $("#shopType").val(shopType);
+                   $("#belongUser").val(data.data.memberName).attr("disabled","disabled");
+                   $("#shopName").val(data.data.shopName);
+                   $("#shopTel").val(data.data.shopTel);
+                   $(".summary").val(data.data.remark);
+                   Province($("#province"),data.data.proviceId,data.data.cityId,data.data.curiocityId);
+                   curioFloorList($("#floor"),data.data.curiocityId,data.data.shopFloor);
+                   $(".detailCoordinate").val(data.data.shopAddress);
+                   $("#bannerImg").attr("src",data.data.bannerFile.url);
+                   $.each(data.data.rooFileList,function(index,value){
+                       $("#innerImgBox").append("<img src='"+ value.url +"' style='width:80px;'>&nbsp;");
+                   });
+                   //编辑提交
+                   $("#submitCurio").click(function(){
+                       var shopType = ($("#shopType").val() == "古玩城店铺") ? 1 : 2;
+                       var innerArray = [];
+                       $("#innerImgBox img").each(function(index,value){
+                           var src=$(value).attr("src");
+                           innerArray.push(src);
+                       });
+                       var submitData = JSON.stringify({
+                           id:data.data.id,
+                           memberId: data.data.memberId,
+                           shopType: shopType,
+                           shopName: $("#shopName").val(),
+                           shopTel:$("#shopTel").val(),
+                           remark:$(".summary").val(),
+                           proviceId:$("#province").val(),
+                           cityId:$("#city").val(),
+                           curiocityId:$("#curio").val(),
+                           shopFloor:$("#floor").find("option:selected").val(),
+                           shopAddress:$(".detailCoordinate").val(),
+                           shopBanner: $("#bannerImg").attr("src"),
+                           shopSlideList:innerArray,
+                           shopState: data.data.shopState
+                       });
+                       $.ajax({
+                           type:"put",
+                           url:"http://120.27.226.156:8080/roo-sys-web/rooShop",
+                           contentType: "application/json;charset=utf-8",
+                           data:submitData,
+                           dataType: "JSON",
+                           beforeSend: function (request) {
+                               request.setRequestHeader("Authorization", Authorization);
+                           },
+                           success:function(data){
+                               console.log(data,"店铺编辑");
+                               if(data.httpCode == 200){
+                                   window.location.reload();
+                               }
+                           }
+                       });
+                   })
+               }
+           }
+       })
+   }
+
+    //**************************删除店铺*********************************//
+    function deleteShop(obj,id){
+        var idData = JSON.stringify({
+            id:id
+        });
+        $.ajax({
+            type:"delete",
+            url:"http://120.27.226.156:8080/roo-sys-web/rooShop/"+id,
+            contentType: "application/json;charset=utf-8",
+            data:idData,
+            dataType: "JSON",
+            beforeSend: function (request) {
+                request.setRequestHeader("Authorization", Authorization);
+            },
+            success:function(data){
+                console.log(data,"删除店铺");
+                if(data.httpCode == 200){
+                    $(obj).parents("tr").remove();
+                    window.location.reload();
+                }
+            }
+        });
+    }
+
+    //**************************店铺开启关闭*********************************//
+    function openOrClose(obj,id){
+        obj.toggle(
+            openOrcloseShop(id,"offShelf"),
+            openOrcloseShop(id,"onShelf")
+        )
+    }
+    function openOrcloseShop(id,operate){
+        var idData = JSON.stringify({
+            id:id
+        });
+        $.ajax({
+            type:"put",
+            url:"http://120.27.226.156:8080/roo-sys-web/rooShop/"+ operate +"/"+id,
+            contentType: "application/json;charset=utf-8",
+            data:idData,
+            dataType: "JSON",
+            beforeSend: function (request) {
+                request.setRequestHeader("Authorization", Authorization);
+            },
+            success:function(data){
+                console.log(data,"店铺开启");
+                if(data.httpCode == 200){
+                    window.location.reload();
+                }
+            }
+        });
+    }
+
+    //**************************店铺审核*********************************//
+    function shopPass(id){
+        var idData = JSON.stringify({
+            id:id
+        });
+        $.ajax({
+            type:"post",
+            url:"http://120.27.226.156:8080/roo-sys-web/rooShop/"+id+"/pass",
+            contentType: "application/json;charset=utf-8",
+            data:idData,
+            dataType: "JSON",
+            beforeSend: function (request) {
+                request.setRequestHeader("Authorization", Authorization);
+            },
+            success:function(data){
+                console.log(data,"店铺审核");
+                if(data.httpCode == 200){
+                    window.location.reload();
+                }
+            }
+        });
+    }
+
+    //**************************店铺推荐*********************************//
+    function shopRecommendOperation(obj,id){
+        obj.toggle(
+            shopRecommend(id,"recommend"),
+            shopRecommend(id,"unRecommend")
+        )
+    }
+    function shopRecommend(id,operate){
+        $.ajax({
+            type:"put",
+            url:"http://120.27.226.156:8080/roo-sys-web/rooShop/"+ operate +"/"+id,
+            contentType: "application/json;charset=utf-8",
+            dataType: "JSON",
+            beforeSend: function (request) {
+                request.setRequestHeader("Authorization",Authorization);
+            },
+            success:function(data){
+                console.log(data,"店铺推荐");
+                if(data.httpCode == 200){
+                    window.location.reload();
+                }
+            }
+        });
+    }
+    //**************************古玩城筛选*********************************//
+    Province($(".f-province"));
+    $(".f-province").change(function () {
+        var proviceId = $(this).find("option:selected").val();
+        requestShopData(proviceId);
+    });
+    function Province(provinceObj,proviceId,cityId,curioId){
+        var provinceData = JSON.stringify({
+            parentId:0
+        });
+        $.ajax({
+            type:"put",
+            url:"http://120.27.226.156:8080/roo-sys-web/cnarea/read/list",
+            contentType: "application/json;charset=utf-8 ",
+            data:provinceData,
+            dataType: "JSON",
+            beforeSend: function (request) {
+                request.setRequestHeader("Authorization", Authorization);
+            },
+            success:function(data){
+                console.log(data,"省");
+                $.each(data.data,function(index,value){
+                    provinceObj.append("<option value='" + value.id + "'>" + value.mergerName + "</option>");    //取到所有省份并将其导入到select中
+                });
+                $("#province option[value="+ proviceId +"]").attr("selected","selected");
+                var cityData = JSON.stringify({
+                    parentId: $("#province").find("option:selected").val()
+                });
+                requestCityData(cityData,cityId,curioId);
+                //当省份更改的时候调取到相应市的数据
+                provinceObj.change(function () {
+                    var provinceId = $(this).find("option:selected").val();
+                    var cityData = JSON.stringify({
+                        parentId:provinceId
+                    });
+                    $("#city").find("option").remove();
+                    $("#curio").find("option").remove();
+                    requestCityData(cityData);
+                });
+            }
+        })
+    }
+    //获取当前省份下市的数据，封装好的函数
+    function requestCityData(cityData,cityId,curioId){
+        var a = cityId;
+        $.ajax({
+            type:"put",
+            url:"http://120.27.226.156:8080/roo-sys-web/cnarea/read/list",
+            contentType: "application/json;charset=utf-8 ",
+            dataType: "JSON",
+            data:cityData,
+            beforeSend: function (request) {
+                request.setRequestHeader("Authorization", Authorization);
+            },
+            success:function(data){
+                console.log(data,"市");
+                $.each(data.data,function(index,value){
+                    $("#city").append("<option value=" + value.id + ">" + value.name + "</option>");  //取到当前省份下的市并将其导入到select中
+                });
+                $("#city option[value='"+ a +"']").attr("selected","selected");
+                var cityId = data.data[0].id;
+                var curioData = JSON.stringify({
+                    pageSize:-1,
+                    cityId:cityId
+                });
+                requestCurioData(curioData,curioId);
+                //当市更改的时候调取到相应市的数据
+                $("#city").change(function () {
+                    $("#curio").find("option").remove();
+                    var cityId = $(this).find("option:selected").val();
+                    var curioData = JSON.stringify({
+                        pageSize:-1,
+                        cityId:cityId
+                    });
+                    requestCurioData(curioData);
+                });
+            }
+        })
+    }
+    //古玩城，封装好的函数
+    function requestCurioData(curioData,curioId){
+        $.ajax({
+            type:"put",
+            url:"http://120.27.226.156:8080/roo-sys-web/rooCuriocity/read/page",
+            contentType: "application/json;charset=utf-8 ",
+            data:curioData,
+            dataType: "JSON",
+            beforeSend: function (request) {
+                request.setRequestHeader("Authorization", Authorization);
+            },
+            success:function(data){
+                //取到所有古玩城并将其导入到select中
+                console.log(data,"古玩城");
+                var curioArray = [];
+                $.each(data.data,function(index,value){
+                    $("#curio").append("<option value=" + value.id + ">" + value.curiocityName + "</option>");
+                    curioArray.push(value.curiocityName);
+                });
+                $("#curio option[value = "+ curioId +"]").attr("selected","selected");
+                if(curioArray.length == 0){
+                    $("#curio").append("<option>该城市暂无古玩城</option>");
+                }
+            }
+        })
+    }
+    //古玩城楼层
+    function curioFloorList(obj,curioId,shopFloor){
+        $.ajax({
+            type:"get",
+            url:"http://120.27.226.156:8080/roo-sys-web/rooCuriocity/"+curioId,
+            contentType: "application/json;charset=utf-8",
+            dataType: "JSON",
+            beforeSend: function (request) {
+                request.setRequestHeader("Authorization", Authorization);
+            },
+            success:function(data){
+                console.log(data,"古玩城详情");
+                if(data.httpCode == 200){
+                    $.each(data.data.curiocityFloorList,function(index,value){
+                        obj.append("<option value="+ value +">" + value + "</option>");
+                        $("#floor option[value = '"+ shopFloor +"']").attr("selected","selected");
+                    })
+                }
+            }
+        });
+    }
+</script>
+</body>
+</html>

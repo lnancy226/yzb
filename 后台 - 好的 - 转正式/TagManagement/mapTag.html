@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title>宝贝标签</title>
+
+    <!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html" />
+    <![endif]-->
+    <link href="../css/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+    <link href="../css/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+    <link href="../css/animate.min.css" rel="stylesheet">
+    <link href="../css/frame.style.css" rel="stylesheet">
+</head>
+<body>
+<div class="mapContainer" id="container">
+    <div class="line"></div>
+    <div class="frame-header">
+        <span>标签管理</span>
+        <span class="minus">-</span>
+        <span>地图标签</span>
+    </div>
+    <div class="tagList">
+        <div class="btn btn-default" id="addTag">新增标签</div>
+        <div class="tableBox">
+            <table class="table table-bordered"
+                   data-pagination="true" id="baiduTable">
+                <thead>
+                <tr class="active tableHeader">
+                    <th data-field="tagName">标签名称</th>
+                    <th data-field="shopTagName">匹配店铺标签</th>
+                    <th data-field="baiduName">百度关键字</th>
+                    <th data-field="sort">排序</th>
+                    <th data-field="operate">操作</th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="bannerContainer" id="baiduTag">
+    <div class="line"></div>
+    <div class="frame-header">
+        <span>标签管理</span>
+        <span>-</span>
+        <span>地图标签</span>
+        <span>-</span>
+        <span id="addOrEdit" style="color: #000;">新增标签</span>
+        <div class="back">返回上一级</div>
+    </div>
+    <form class="addContent" role="form" enctype="multipart/form-data">
+        <div class="form-group">
+            <label>*分类</label><br>
+            <select id="tagClassify" style="width:470px;">
+                <option value="1">古玩文玩</option>
+                <option value="2">生活服务</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>*标签名称</label><br>
+            <input id="tagName" type="text" style="width:470px;">
+        </div>
+        <div class="form-group">
+            <label>*百度关键字</label><br>
+            <input id="baiduKeyword" type="text" style="width:470px;">
+        </div>
+        <div class="form-group">
+            <label>*排序号</label><br>
+            <input id="sortNo" type="text" style="width:470px;">
+        </div>
+        <div class="form-group">
+            <label>匹配店铺标签</label><br>
+            <select id="linkShopTag" style="width:470px;"></select>
+        </div>
+        <div class="form-group">
+            <div id="submit" class="btn btn-default">提交</div>
+        </div>
+    </form>
+</div>
+<script src="../js/jquery.min.js?v=2.1.4"></script>
+<script src="../js/jquery.cookie.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script src="../js/content.min.js"></script>
+<script src="../js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="../js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+<script src="../js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="../js/demo/bootstrap-table-demo.min.js"></script>
+<script type="text/javascript" src="http://tajs.qq.com/stats?sId=9051096" charset="UTF-8"></script>
+<script>
+    var parentIdW,parentIdS;    //定义上级标签的id变量；
+    var Authorization = $.cookie("Authorization");  //全局token
+    var linkShopTag = [];       //匹配店铺标签的容器
+    $(function(){
+        $("#baiduTag").hide();
+        var tagName = [];
+        var dataObj = {};
+        var detailObj = {};
+        var jsonData;
+        var jsonDetail;
+        var mapData = JSON.stringify({
+            pageNum:1,
+            pageSize:10
+        });
+        $.ajax({
+            type:"get",
+            url:"http://116.62.131.70:8081/roo-sys-web/rooTag/read/list/map",
+            beforeSend: function (request) {
+                request.setRequestHeader("Authorization", Authorization);
+            },
+            //data:mapData,
+            contentType: "application/json;charset=utf-8",
+            dataType:"JSON",
+            success:function(data){
+                if(data.httpCode == 200){
+                    console.log(data,"地图标签");
+                    $.each(data.data,function(index,value){
+                        dataObj = {
+                            "tagName":"<img src='../img/detail.png'class='parentTag' style='cursor: pointer;'>&nbsp;" + value.tagName,
+                            "shopTagName":"-",
+                            "baiduName":"-",
+                            "sort":"<input type='text' value='" + value.sortNo + "' style='width:40px;text-align:center;'>",
+                            "operate":"<a style='color:#bda34a;cursor: pointer;' >编辑</a><span>&nbsp;&nbsp;</span>" +
+                            "<a style='color:#bda34a;cursor: pointer;'>删除</a>"
+                        };
+                        jsonData= JSON.parse(JSON.stringify(dataObj));
+                        tagName.push(jsonData);
+                        $.each(value.rooTagBeans,function(int,dValue){
+                            detailObj = {
+                                "tagName":"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;" + dValue.tagName,
+                                "shopTagName":dValue.linkTagName || "-",
+                                "baiduName": dValue.baiduTag,
+                                "sort":"<input type='text' value='" + dValue.sortNo + "' style='width:40px;text-align:center;'>",
+                                "operate":"<a style='color:#bda34a;cursor: pointer;' onclick=editRow($(this),'" + dValue.id + "') >编辑</a><span>&nbsp;&nbsp;</span>" +
+                                "<a class='childTag' style='color:#bda34a;cursor: pointer;' onclick=deleteRow($(this),'" + dValue.id + "')>删除</a>"
+                            };
+                            jsonDetail =  JSON.parse(JSON.stringify(detailObj));
+                            tagName.push(jsonDetail);
+                        });
+                        if(index == 0){
+                            parentIdW = value.id;           //当上级标签是古玩文玩类时，定义parentId
+                        }else if(index == 1){
+                            parentIdS = value.id;            //当上级标签是生活服务类时，定义parentId
+                        }
+                    });
+                    $("#baiduTable").bootstrapTable({
+                        data: tagName,
+                        pageNumber: 1,
+                        pageSize: 10,
+                        pageList: [10, 20],
+                        bPaginate: true, //翻页功能
+                        paginationLoop: false,
+                        paginationPreText: '上一页',
+                        paginationNextText: '下一页',
+                        showColumns: true,
+                        exportDataType: "selected",
+                        sidePagination: "client",
+                        clickToSelect: true,
+                        detailView: false,
+                        minimunCountColumns: 2,
+                        onPageChange: function (number, size) {
+                            $(".pagination").css("margin-top", "0px");
+                        },
+                        columns : [
+                            {
+                                title : '标签名称'
+                            }, {
+                                title : '匹配店铺标签',
+                                width : 300
+                            }, {
+                                title : '百度关键字'
+                            }, {
+                                title : '排序'
+                            }, {
+                                title : '操作'
+                            }  ]
+                    });
+                    $(".fixed-table-loading").css("display", "none");
+                    $(".pagination").css("margin-top", "0px");
+                }
+            }
+        });
+        //添加标签
+        $("#addTag").click(function () {
+            addTag();
+        });
+        //返回上一级
+        $(".back").click(function () {
+            $("#container").show();
+            $("#baiduTag").hide();
+        });
+    });
+    /***************************匹配店铺标签***********************************/
+    function matchShopTag(){
+        var shopTag = JSON.stringify({
+            parentId:0
+        });
+        $.ajax({
+            type: "get",
+            url: "http://116.62.131.70:8081/roo-sys-web/rooTag/read/list/goods",
+            contentType: "application/json;charset=utf-8 ",
+            //data: shopTag,  //传参后报错
+            dataType: "JSON",
+            beforeSend: function (request) {
+                request.setRequestHeader("Authorization", Authorization);
+            },
+            success:function(data){
+                console.log(data,"匹配店铺标签数据");
+                if(data.httpCode == 200){
+                    var nullId = "";
+                    $.each(data.data,function(index,value){
+                        $("#linkShopTag").append("<option value=" + value.id + ">" + value.tagName + "</option>");
+                    });
+                    $("#linkShopTag").append("<option value=" + nullId + ">-</option>");
+                }
+            }
+        });
+    }
+    /***************************新增标签***********************************/
+    function addTag(){
+        $("#container").hide();
+        $("#baiduTag").show();
+        matchShopTag();                  //匹配店铺标签数据填充
+        //定义需要的参数
+        var parentId;
+        //选择分类
+        parentId = parentIdW;
+        $("#tagClassify").change(function(){
+            if ($("#tagClassify").find("option:selected").val() == 1) {
+                parentId = parentIdW;
+            }
+            if ($("#tagClassify").find("option:selected").val() == 2) {
+                parentId = parentIdS;
+            }
+        });
+        //提交
+        $("#submit").click(function() {
+            var submitData = JSON.stringify({
+                linkTagId:$("#linkShopTag").find("option:selected").val(),
+                baiduTag:$("#baiduKeyword").val(),
+                parentId:parentId,
+                sortNo:$("#sortNo").val(),
+                tagName:$("#tagName").val(),
+                tagType:2
+            });
+            $.ajax({
+                type: "post",
+                url: "http://116.62.131.70:8081/roo-sys-web/rooTag",
+                contentType: "application/json;charset=utf-8 ",
+                data: submitData,
+                dataType: "JSON",
+                beforeSend: function (request) {
+                    request.setRequestHeader("Authorization", Authorization);
+                },
+                success: function (data) {
+                    console.log(data, "提交");
+                    if (data.httpCode == 200) {
+                        alert("提交成功");
+                        $("#container").show();
+                        $("#baiduTag").hide();
+                        window.location.reload();
+                    }
+                }
+            })
+        });
+    }
+
+    /***************************删除标签***********************************/
+    function deleteRow(obj,id){
+        var idData = JSON.stringify({
+            id:id
+        });
+        $.ajax({
+            type:"delete",
+            url:"http://116.62.131.70:8081/roo-sys-web/rooTag/"+id,
+            contentType: "application/json;charset=utf-8",
+            data:idData,
+            dataType: "JSON",
+            beforeSend: function (request) {
+                request.setRequestHeader("Authorization", Authorization);
+            },
+            success:function(data){
+                console.log(data,"删除地图标签");
+                if(data.httpCode == 200){
+                    $(obj).parents("tr").remove();
+                    window.location.reload();
+                }
+            }
+        });
+    }
+
+    /***************************编辑标签***********************************/
+    function editRow(obj,id){
+        $("#linkShopTag").html("");
+        $.ajax({
+            url:"http://116.62.131.70:8081/roo-sys-web/rooTag/"+id,
+            type:"get",
+            contentType: "application/json;charset=utf-8",
+            dataType: "JSON",
+            beforeSend: function (request) {
+                request.setRequestHeader("Authorization", Authorization);
+            },
+            success:function(data){
+                console.log(data,"获取标签详情");
+                if(data.httpCode == 200){
+                    //编辑页面展示
+                    $("#container").hide();
+                    $("#baiduTag").show();
+                    if(data.data.parentName == "古玩文玩"){
+                        $("#tagClassify").find("option").eq(0).attr("selected","selected");
+                    }else if(data.data.parentName == "生活服务"){
+                        $("#tagClassify").find("option").eq(1).attr("selected","selected");
+                    }
+                    $("#tagName").val(data.data.tagName);
+                    $("#baiduKeyword").val(data.data.baiduTag);
+                    $("#sortNo").val(data.data.sortNo);
+                    matchShopTag();                   //匹配店铺标签填充数据
+                    $("#linkShopTag option[value='"+ data.data.linkTagId +"']").attr("selected","selected");
+                    $("#submit").click(function(){
+                        editTagSubmit(data.data.id,data.data.parentId);
+                    })
+
+                }
+            }
+        })
+    }
+    //编辑提交
+    function editTagSubmit(id,parentId){
+        var submitData=JSON.stringify({
+            id:id,
+            baiduTag:$("#baiduKeyword").val(),
+            linkTagId:$("#linkShopTag").find("option:selected").val(),
+            parentId:parentId,
+            sortNo:$("#sortNo").val(),
+            tagName:$("#tagName").val(),
+            tagType:2
+        });
+        console.log(submitData,"submitData");
+        $.ajax({
+            url:"http://116.62.131.70:8081/roo-sys-web/rooTag",
+            type:"put",
+            contentType: "application/json;charset=utf-8",
+            dataType: "JSON",
+            data:submitData,
+            beforeSend: function (request) {
+                request.setRequestHeader("Authorization", Authorization);
+            },
+            success:function(data){
+                console.log(data,"编辑提交");
+                if(data.httpCode == 200){
+                    alert("提交成功");
+                    $("#container").show();
+                    $("#baiduTag").hide();
+                    window.location.reload();
+                }
+            }
+        })
+    }
+</script>
+</body>
+</html>
